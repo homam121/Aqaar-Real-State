@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Base-expo-latest",
-    "slug": "Base-expo-latest",
+    "name": "Aqaar",
+    "slug": "Aqaar-RealState",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "baseexpolatest",
+    "icon": "./assets/Aqaar_Logo.png",
+    "scheme": "aqaarrealstate",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -20,6 +20,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
@@ -28,13 +29,15 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#E8E8E8",
           "android": {
-            "image": "./assets/images/splash-icon.png",
+            "image": "./assets/Aqaar_Logo.png",
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      "expo-image",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
