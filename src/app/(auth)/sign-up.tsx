@@ -153,7 +153,7 @@ const SignUp = () => {
                     {loading ? (
                       <ActivityIndicator
                         className='color-white'
-                        size={'large'}
+                        size={'small'}
                       />
                     ) : (
                       <Text

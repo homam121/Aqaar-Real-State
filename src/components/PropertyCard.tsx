@@ -43,13 +43,15 @@ const PropertyCard = ({ item, showDescription ,showArea}: PropertyCardProps) => 
           </Text>
         </View>
         <View
+        className='my-1'
           style={{
             boxShadow: '0px 2px 5px rgba(0,0,0,0.25)',
             borderRadius: 24,
+            justifyContent:'center',
           }}>
           <Image
             source={{ uri: item.images[0] }}
-            className='w-32 h-28 self-center'
+            className='w-32 h-24 self-center flex-1'
             style={{ borderRadius: 24 }}
             resizeMode='cover'
           />
@@ -102,10 +104,10 @@ const PropertyCard = ({ item, showDescription ,showArea}: PropertyCardProps) => 
                 </Text>
               </View>
             </View>
-            <Text className='text-SecondaryOrg font-rubik-semiBold'>
+          </View>
+            <Text className='text-SecondaryOrg font-rubik-semiBold text-right'>
               {formatPrice(item.price)}
             </Text>
-          </View>
         </View>
       </View>
       {showDescription && (

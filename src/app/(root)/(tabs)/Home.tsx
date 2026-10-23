@@ -25,7 +25,7 @@ import Carousel, {
 } from 'react-native-reanimated-carousel'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const SCALE_VALUES: [number, number, number] = [0.98,1,0.9]
+const SCALE_VALUES: [number, number, number] = [0.98,1,0.93]
 
 const Home = () => {
   const [featuredData, setFeaturedData] = useState<PropertyProps[]>([])

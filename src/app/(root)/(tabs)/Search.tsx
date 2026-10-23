@@ -17,7 +17,7 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 
-const SCALE_VALUES: [number, number, number] = [0.95, 1, 0.9] 
+const SCALE_VALUES: [number, number, number] = [0.95, 1, 0.95] 
 
 const Search = () => {
   const [loading, setLoading] = useState(false)
@@ -99,7 +99,7 @@ const Search = () => {
       scrollY.value = event.contentOffset.y
     },
   })
-  const ITEM_HEIGHT = 236.8
+  const ITEM_HEIGHT = 250
 
   const titleAnimatedStyle = useAnimatedStyle(() => {
     const height = interpolate(
