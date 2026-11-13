@@ -1,7 +1,7 @@
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import {
   Extrapolation,
   interpolate,
@@ -11,6 +11,7 @@ import {
 import { PropertyProps } from '../types/types'
 import Animated from 'react-native-reanimated'
 import { formatPrice } from '@/lib/utils'
+import { useRouter } from 'expo-router'
 
 export interface FeaturedCardProps {
   item: PropertyProps
@@ -18,6 +19,7 @@ export interface FeaturedCardProps {
 }
 
 const FeaturedCard = ({ item, animationValue }: FeaturedCardProps) => {
+  const router = useRouter()
   const cardStyle = useAnimatedStyle(() => {
     const topRightRadius = interpolate(
       animationValue.value,
@@ -56,61 +58,61 @@ const FeaturedCard = ({ item, animationValue }: FeaturedCardProps) => {
         alignSelf: 'center',
       },cardStyle]}
       >
-      <Image
-        source={{uri:item.images[0]}}
-        className='w-full h-44'
-        resizeMode='cover'
-      />
-      <View className='pl-3 pr-1 pb-3 pt-2 bg-white'>
-        <View
-          className='self-end px-2 rounded-tl-xl'
-          style={{ backgroundColor: 'rgba(255, 113, 76, 0.8)' }}>
-          <Text className='text-right text-sm color-white font-rubik-semiBold'>
-            {item.type}
-          </Text>
-        </View>
-
-        <Text
-          numberOfLines={1}
-          className='font-rubik-semiBold text-lg color-TextColorPrimary pt-1 mb-1'>
-          {item.title}
-        </Text>
-        <View className='gap-1'>
-          <View className='flex-row'>
-            <Entypo name='location' size={14} color='#0D3C36' />
-            <Text
-              numberOfLines={1}
-              className='pl-1 text-sm font-rubik-light color-TextColorPrimary pr-5'>
-              {item.address}
+      <TouchableOpacity activeOpacity={0.8} onPress={()=>router.push(`/(root)/property/${item.id}`)}>
+        <Image
+          source={{uri:item.images[0]}}
+          className='w-full h-44'
+          resizeMode='cover'
+        />
+        <View className='pl-3 pr-1 pb-3 pt-2 bg-white'>
+          <View
+            className='self-end px-2 rounded-tl-xl'
+            style={{ backgroundColor: 'rgba(255, 113, 76, 0.8)' }}>
+            <Text className='text-right text-sm color-white font-rubik-semiBold'>
+              {item.type}
             </Text>
           </View>
-
-          <View className='flex-row gap-3'>
-            <View className='flex-row '>
-              <View className='w-5 justify-end'>
-                <Ionicons name='bed' size={15} color='#0D3C36' />
-              </View>
-              <Text className='pl-1 text-sm font-rubik-light'>
-                {item.bedrooms}
+          <Text
+            numberOfLines={1}
+            className='font-rubik-semiBold text-lg color-TextColorPrimary pt-1 mb-1'>
+            {item.title}
+          </Text>
+          <View className='gap-1'>
+            <View className='flex-row'>
+              <Entypo name='location' size={14} color='#0D3C36' />
+              <Text
+                numberOfLines={1}
+                className='pl-1 text-sm font-rubik-light color-TextColorPrimary pr-5'>
+                {item.address}
               </Text>
             </View>
-            <View className='flex-row '>
-              <View className=' w-5 justify-end pl-1 '>
-                <FontAwesome5 name='toilet' size={14} color='#0D3C36' />
+            <View className='flex-row gap-3'>
+              <View className='flex-row '>
+                <View className='w-5 justify-end'>
+                  <Ionicons name='bed' size={15} color='#0D3C36' />
+                </View>
+                <Text className='pl-1 text-sm font-rubik-light'>
+                  {item.bedrooms}
+                </Text>
               </View>
-              <Text className='pl-1 text-sm font-rubik-light'>
-                {item.bathrooms}
-              </Text>
+              <View className='flex-row '>
+                <View className=' w-5 justify-end pl-1 '>
+                  <FontAwesome5 name='toilet' size={14} color='#0D3C36' />
+                </View>
+                <Text className='pl-1 text-sm font-rubik-light'>
+                  {item.bathrooms}
+                </Text>
+              </View>
             </View>
           </View>
+          <View className='self-end pr-2'>
+            <Text className='text-SecondaryOrg font-rubik-semiBold'>
+              {formatPrice(item.price)}
+        
+            </Text>
+          </View>
         </View>
-        <View className='self-end pr-2'>
-          <Text className='text-SecondaryOrg font-rubik-semiBold'>
-            {formatPrice(item.price)}
-            
-          </Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     </Animated.View>
   )
 }

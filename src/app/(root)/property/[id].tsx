@@ -3,6 +3,7 @@ import { useSupabase } from '@/hooks/useSupabase'
 import { supabase } from '@/lib/supabase'
 import { formatPrice } from '@/lib/utils'
 import { PropertyProps } from '@/src/types/types'
+import { useUserStore } from '@/store/userStore'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -10,6 +11,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Alert,
   Image,
+  Linking,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -41,7 +43,7 @@ export default function ProductScreen() {
   const progress = useSharedValue<number>(0)
   const router = useRouter()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
+  const isAdmin = useUserStore(state => state.isAdmin)
   const [loading, setLoading] = useState(true)
   const { isSaved, saveLoading, toggleSave } = useSavedProperty(id ?? '')
   const authSupabase = useSupabase()
@@ -89,6 +91,30 @@ export default function ProductScreen() {
         { text: 'Cancel', style: 'cancel' },
       ],
     )
+  }
+  // End of Admin Function
+
+  const handleWhatsAppInquiry = async () => {
+    const phoneNumber = '963954562343'
+    const message = `Hello, I would like to inquire about this property: ${property?.title ?? ''}`
+    const encodedMessage = encodeURIComponent(message)
+
+    const appUrl = `whatsapp://send?phone=${property?.realtor_number}&text=${encodedMessage}`
+    const webUrl = `https://wa.me${property?.realtor_number}?text=${encodedMessage}`
+
+    try {
+      const supported = await Linking.canOpenURL(appUrl)
+      if (supported) {
+        await Linking.openURL(appUrl)
+      } else {
+        await Linking.openURL(webUrl)
+      }
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'Unable to open WhatsApp. Please make sure it is installed on your device.',
+      )
+    }
   }
 
   useEffect(() => {
@@ -139,14 +165,38 @@ export default function ProductScreen() {
         scrollEnabled={scrollEnabled}
         contentContainerClassName='grow mx-[4%]'
         showsVerticalScrollIndicator={false}>
-        <TouchableOpacity onPress={() => router.back()} className='mt-1 mb-3'>
-          <Ionicons
-            name='arrow-back-sharp'
-            color={'#0D3C36'}
-            size={45}
-            className='ml-2'
-          />
-        </TouchableOpacity>
+        <View className='flex-row justify-between'>
+          <TouchableOpacity onPress={() => router.back()} className='mt-1 mb-3'>
+            <Ionicons
+              name='arrow-back-sharp'
+              color={'#0D3C36'}
+              size={45}
+              className='ml-2'
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              toggleSave()
+            }}
+            disabled={saveLoading}>
+            {isSaved ? (
+              <Ionicons
+                className='top-2'
+                color={'#0D3C36'}
+                name='bookmark'
+                size={43}
+              />
+            ) : (
+              <Ionicons
+                className='top-2'
+                color={'#0D3C36'}
+                name='bookmark-outline'
+                size={43}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
 
         {/* Image Slider Section Container */}
         <View
@@ -295,6 +345,7 @@ export default function ProductScreen() {
 
           {/* Open full map */}
           <TouchableOpacity
+            activeOpacity={0.7}
             onPress={() =>
               router.push({
                 pathname: '/(root)/property/map',
@@ -311,6 +362,39 @@ export default function ProductScreen() {
               View full map
             </Text>
           </TouchableOpacity>
+          {/*WhatsApp contact button */}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleWhatsAppInquiry}
+            disabled={!property?.realtor_number?.trim()}
+            className={`flex-row items-center justify-center gap-2 mb-5 py-3 rounded-2xl bg-green-500 ${
+              !property?.realtor_number?.trim() ? 'opacity-50' : ''
+            }`}>
+            <Ionicons name='logo-whatsapp' size={22} color='white' />
+            <Text className='font-rubik-semiBold text-lg text-white'>
+              Contact By Whatsapp
+            </Text>
+          </TouchableOpacity>
+          {isAdmin && (
+            <View className='flex-row justify-evenly gap-2'>
+              <TouchableOpacity
+                onPress={handleDelete}
+                className='flex-row items-center justify-center gap-2 mb-5 py-3 px-5 rounded-2xl bg-red-500'>
+                <Ionicons name='trash-outline' size={25} color='white' />
+                <Text className='font-rubik-semiBold text-lg text-white'>
+                  Delete
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleMarkSold}
+                className='flex-row items-center justify-center gap-2 mb-5 py-3 px-5 rounded-2xl bg-green-500'>
+                <Ionicons name='checkmark-done' size={25} color='white' />
+                <Text className='font-rubik-semiBold text-lg text-white'>
+                  Mark As Sold
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </ScrollView>
 

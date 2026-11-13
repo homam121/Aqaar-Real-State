@@ -15,6 +15,7 @@ images:string[],
 is_featured:boolean,
  is_sold:boolean,
 created_at:string,
+realtor_number:string
 }
 
 export interface AnimatedPropertyCardProps {

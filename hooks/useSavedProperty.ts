@@ -8,15 +8,19 @@ const useSavedProperty = (propertyId:string,onUnsave?:()=>void) => {
   const authSupabase = useSupabase()
   const {userId}=useAuth()
 
-  useEffect(()=>{checkIfSaved()},[propertyId,userId])
+  useEffect(() => {
+    if (authSupabase && userId && propertyId) {
+      checkIfSaved()
+    }
+  }, [propertyId, userId, authSupabase])
   
   const checkIfSaved= async () => {
     try {
         if(!userId) return
         const {data,error}=await authSupabase.from("saved_properties").select('id').eq('property_id',propertyId)
-        .eq('user_clerk_id',userId).single()
+        .eq('user_clerk_id',userId).maybeSingle()
         setIsSaved(!!data)
-        console.log("Error in checkIfSaved Try :",error?.message)
+        if(error)console.log("Error in checkIfSaved Try :",error?.message)
     } catch (error) {
         console.log("Error catched checkIfSaved:",error)
     }

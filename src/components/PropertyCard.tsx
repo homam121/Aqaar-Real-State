@@ -30,6 +30,7 @@ const PropertyCard = ({ item, showDescription ,showArea}: PropertyCardProps) => 
         marginHorizontal: 15,
       }}
       onPress={()=>{router.push(`/(root)/property/${item.id}`)}}
+      activeOpacity={0.7}
       >
       <View className='flex-row gap-3 px-4 py-2 justify-between'>
         <View
