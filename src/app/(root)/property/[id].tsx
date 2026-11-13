@@ -8,6 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
+  Alert,
   Image,
   ScrollView,
   Text,
@@ -15,6 +16,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
+import ImageViewing from 'react-native-image-viewing'
 import {
   Extrapolation,
   interpolate,
@@ -31,21 +33,63 @@ export default function ProductScreen() {
   const { width } = useWindowDimensions()
   const [property, setProperty] = useState<PropertyProps | null>(null)
   const [expanded, setExpanded] = useState(false)
-  const[imageViewerVisible,setImageViewerVisible]=useState(false)
+  const [imageViewerVisible, setImageViewerVisible] = useState(false)
   const [mapKey, setMapKey] = useState(0)
   const [scrollEnabled, setScrollEnabled] = useState(true)
   const { id } = useLocalSearchParams<{ id: string }>()
   const carouselRef = useRef<ICarouselInstance>(null)
   const progress = useSharedValue<number>(0)
   const router = useRouter()
-  
-  //const[loading,setLoading]=useState(true)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  const [loading, setLoading] = useState(true)
+  const { isSaved, saveLoading, toggleSave } = useSavedProperty(id ?? '')
+  const authSupabase = useSupabase()
 
   const sliderWidth = width * 0.92
   const imageHeight = sliderWidth - sliderWidth * 0.3
 
   const images: string[] = property?.images ?? []
+  const viewerImages = images.map(img => ({ uri: img }))
 
+  //Admin Functions
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete Property',
+      `Are you sure of deleting ${property?.title} ?`,
+      [
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await authSupabase.from('properties').delete().eq('id', id)
+            router.replace('/(root)/(tabs)/Home')
+          },
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ],
+    )
+  }
+
+  const handleMarkSold = () => {
+    Alert.alert(
+      'Mark As Sold',
+      `Are you sure that you want to mark ${property?.title} as sold ?`,
+      [
+        {
+          text: 'Mark',
+          onPress: async () => {
+            await authSupabase
+              .from('properties')
+              .update({ is_sold: true })
+              .eq('id', id)
+            setProperty(prev => (prev ? { ...prev, is_sold: true } : prev))
+          },
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ],
+    )
+  }
 
   useEffect(() => {
     if (id) {
@@ -63,7 +107,7 @@ export default function ProductScreen() {
 
       if (error) throw error
       setProperty(data)
-      //setLoading(false)
+      setLoading(false)
     } catch (error) {
       console.log('ERROR caught from fetchDetails:', error)
     }
@@ -147,12 +191,19 @@ export default function ProductScreen() {
                 opacity,
               }
             }}
-            renderItem={({ item }) => (
-              <Image
-                source={{ uri: item }}
-                resizeMode='cover'
-                style={{ width: sliderWidth, height: imageHeight }}
-              />
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  setImageViewerVisible(true)
+                  setCurrentImageIndex(index)
+                }}>
+                <Image
+                  source={{ uri: item }}
+                  resizeMode='cover'
+                  style={{ width: sliderWidth, height: imageHeight }}
+                />
+              </TouchableOpacity>
             )}
           />
         </View>
@@ -262,6 +313,28 @@ export default function ProductScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <ImageViewing
+        images={viewerImages}
+        imageIndex={currentImageIndex}
+        visible={imageViewerVisible}
+        onRequestClose={() => setImageViewerVisible(false)}
+        HeaderComponent={({ imageIndex }) => (
+          <View className='flex-row items-center justify-between px-5 pt-4'>
+            <View className='bg-black/60 px-3 py-1.5 rounded-full'>
+              <Text className='text-white font-rubik-semiBold text-base'>
+                {imageIndex + 1} / {viewerImages.length}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => setImageViewerVisible(false)}
+              className='w-10 h-10 rounded-full bg-black/60 items-center justify-center'>
+              <Ionicons name='close' size={24} color='white' />
+            </TouchableOpacity>
+          </View>
+        )}
+      />
     </SafeAreaView>
   )
 }
