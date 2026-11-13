@@ -2,8 +2,9 @@ import { formatPrice } from '@/lib/utils'
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { PropertyProps } from '../types/types'
+import { useRouter } from 'expo-router'
 
 interface PropertyCardProps {
   item: PropertyProps;
@@ -12,8 +13,9 @@ interface PropertyCardProps {
 }
 
 const PropertyCard = ({ item, showDescription ,showArea}: PropertyCardProps) => {
+  const router = useRouter()
   return (
-    <View
+    <TouchableOpacity
       className='gap-3 bg-white justify-between '
       style={{
         borderTopLeftRadius: 125,
@@ -26,7 +28,9 @@ const PropertyCard = ({ item, showDescription ,showArea}: PropertyCardProps) => 
         shadowOpacity: 0.15,
         shadowRadius: 4,
         marginHorizontal: 15,
-      }}>
+      }}
+      onPress={()=>{router.push(`/(root)/property/${item.id}`)}}
+      >
       <View className='flex-row gap-3 px-4 py-2 justify-between'>
         <View
           className='absolute top-0 z-20 right-0 px-4 py-0.5'
@@ -120,7 +124,7 @@ const PropertyCard = ({ item, showDescription ,showArea}: PropertyCardProps) => 
           </Text>
         </>
       )}
-    </View>
+    </TouchableOpacity>
   )
 }
 

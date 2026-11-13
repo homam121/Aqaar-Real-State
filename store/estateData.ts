@@ -1,9 +1,10 @@
+const PropertyImage=[require('@/assets/propertyMock/Property 1.jpg'),require('@/assets/propertyMock/Property 2.jpg'),require('@/assets/propertyMock/Property 3.jpg')]
 export const MOCK_ESTATES_DATA = [
   {
     id: 'd3b07384-d113-4ec2-a5d6-c9a92a549110',
     title: 'Maison De la Dubai',
     description:
-      'A stunning, hyper-modern luxury villa featuring a private infinity pool, massive floor-to-ceiling glass windows, and premium smart home integration throughout.',
+      'A stunning, hyper-modern luxury villa featuring a private infinity pool, massive floor-to-ceiling glass windows, and premium smart home integration throughout, with some shining description over 200 letter for testing hope it will work.',
     price: 1655500,
     type: 'villa',
     bedrooms: 3,
@@ -14,7 +15,7 @@ export const MOCK_ESTATES_DATA = [
     city: 'Dubai',
     latitude: 25.2048,
     longitude: 55.2708,
-    images: ['https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800'],
+    images: PropertyImage,
     is_featured: true,
     is_sold: false,
     created_at: '2026-07-20T14:32:01.000Z',

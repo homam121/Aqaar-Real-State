@@ -237,7 +237,7 @@ const signIn = () => {
                     onSignInPress()
                   }}>
                   {loading ? (
-                    <ActivityIndicator className='color-white' size={'large'} />
+                    <ActivityIndicator className='color-white' size={'small'} />
                   ) : (
                     <Text className={`font-rubik-semiBold text-lg text-white`}>
                       Sign In

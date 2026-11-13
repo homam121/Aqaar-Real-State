@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router'
 
 const TabsLayout = () => {
   return (
-    <Tabs screenOptions={{headerShown:false}}/>
+    <Tabs backBehavior='history' screenOptions={{headerShown:false}}/>
   )
 }
 

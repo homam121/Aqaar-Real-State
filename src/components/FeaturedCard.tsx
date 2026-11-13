@@ -54,7 +54,8 @@ const FeaturedCard = ({ item, animationValue }: FeaturedCardProps) => {
        
         width: '50%',
         alignSelf: 'center',
-      },cardStyle]}>
+      },cardStyle]}
+      >
       <Image
         source={{uri:item.images[0]}}
         className='w-full h-44'

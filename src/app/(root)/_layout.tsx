@@ -15,6 +15,7 @@ export default function App() {
       </View>
     )
 
-  if(isSignedIn) return <Slot/>
-  return <Redirect href={'/(auth)/sign-in'} /> 
+  if (!isSignedIn) return <Redirect href="/sign-in" />;
+
+  return <Slot />;
 }

@@ -13,7 +13,7 @@ export default function App() {
     )
 
   return isSignedIn ? (
-    <Redirect href={'/(root)/(tabs)/Search'} />
+    <Redirect href={'/(root)/(tabs)/Home'} />
   ) : (
     <Redirect href={'/(auth)/sign-in'} />
   )
